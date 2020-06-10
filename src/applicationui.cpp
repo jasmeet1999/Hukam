@@ -23,7 +23,7 @@
 #include <bb/cascades/StackLayout>
 #include <bb/cascades/Page>
 
-#include <bb/data/JsonDataAccess>
+#include "RequestBani.hpp"
 
 using namespace bb::cascades;
 
@@ -47,58 +47,13 @@ ApplicationUI::ApplicationUI() :
     Container *pContainer = new Container();
     pContainer->setLayout(StackLayout::create());
 
-    const QString API = "https://api.gurbaninow.com/v2/hukamnama/today";
-
-    const QUrl url(API);
-
-    QNetworkRequest request(url);
-
-    manager = new QNetworkAccessManager();
-    manager->get(request);
-    connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(onReply(QNetworkReply*)));
+    RequestBani *requestBani = new RequestBani();
+    requestBani->getRequest();
 
     Page *page = new Page();
     page->setContent(pContainer);
 
     Application::instance()->setScene(page);
-}
-
-void ApplicationUI::onReply(QNetworkReply *reply)
-{
-    bb::data::JsonDataAccess json;
-    QVariant list = json.load(reply);
-    QMap<QString ,QVariant> map = list.toMap();
-
-    bool check = map.contains("error");
-
-    QString ans = map.value("error").toString();
-
-    QMap<QString ,QVariant> date = map.value("date").toMap();
-    QMap<QString ,QVariant> gregorian = date.value("gregorian").toMap();
-
-    QMap<QString ,QVariant> nanakshahi = date.value("nanakshahi").toMap();
-    QMap<QString ,QVariant> punjabi = nanakshahi.value("punjabi").toMap();
-
-    QMap<QString ,QVariant>::const_iterator punjabiDateItr = punjabi.begin();
-
-    QString pbDate = " "+punjabiDateItr.key();
-    QString pbDateN = " "+punjabiDateItr.value().toString().toUtf8();
-    QString pb = QString::fromLatin1("%1 : %2").arg(punjabiDateItr.key(),pbDateN);
-
-    QMap<QString ,QVariant>::const_iterator dateItr = gregorian.begin();
-    dateItr++;
-    QString key = dateItr.key();
-    QString val = " ";
-    val.append(dateItr.value().toString());
-
-    if (map.value("error").toString() == "false"){
-        int a;
-        a++;
-    }
-
-    int a=1;
-    a++;
-
 }
 
 void ApplicationUI::onSystemLanguageChanged()

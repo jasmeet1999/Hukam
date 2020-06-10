@@ -17,10 +17,7 @@
 #ifndef ApplicationUI_HPP_
 #define ApplicationUI_HPP_
 
-#include <QObject>
-
-#include <QtNetwork/QNetworkAccessManager>
-#include <QtNetwork/QNetworkReply>
+#include <QtCore/QObject>
 
 namespace bb
 {
@@ -45,12 +42,10 @@ public:
     virtual ~ApplicationUI() {}
 private slots:
     void onSystemLanguageChanged();
-    void onReply(QNetworkReply*);
 
 private:
     QTranslator* m_pTranslator;
     bb::cascades::LocaleHandler* m_pLocaleHandler;
-    QNetworkAccessManager *manager;
 };
 
 #endif /* ApplicationUI_HPP_ */

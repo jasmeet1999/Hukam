@@ -17,9 +17,13 @@
 #include "applicationui.hpp"
 
 #include <bb/cascades/Application>
-#include <bb/cascades/QmlDocument>
-#include <bb/cascades/AbstractPane>
 #include <bb/cascades/LocaleHandler>
+
+#include <bb/cascades/Container>
+#include <bb/cascades/StackLayout>
+#include <bb/cascades/Page>
+
+#include <bb/data/JsonDataAccess>
 
 using namespace bb::cascades;
 
@@ -40,15 +44,61 @@ ApplicationUI::ApplicationUI() :
     // initial load
     onSystemLanguageChanged();
 
-    // Create scene document from main.qml asset, the parent is set
-    // to ensure the document gets destroyed properly at shut down.
-    QmlDocument *qml = QmlDocument::create("asset:///main.qml").parent(this);
+    Container *pContainer = new Container();
+    pContainer->setLayout(StackLayout::create());
 
-    // Create root object for the UI
-    AbstractPane *root = qml->createRootObject<AbstractPane>();
+    const QString API = "https://api.gurbaninow.com/v2/hukamnama/today";
 
-    // Set created root object as the application scene
-    Application::instance()->setScene(root);
+    const QUrl url(API);
+
+    QNetworkRequest request(url);
+
+    manager = new QNetworkAccessManager();
+    manager->get(request);
+    connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(onReply(QNetworkReply*)));
+
+    Page *page = new Page();
+    page->setContent(pContainer);
+
+    Application::instance()->setScene(page);
+}
+
+void ApplicationUI::onReply(QNetworkReply *reply)
+{
+    bb::data::JsonDataAccess json;
+    QVariant list = json.load(reply);
+    QMap<QString ,QVariant> map = list.toMap();
+
+    bool check = map.contains("error");
+
+    QString ans = map.value("error").toString();
+
+    QMap<QString ,QVariant> date = map.value("date").toMap();
+    QMap<QString ,QVariant> gregorian = date.value("gregorian").toMap();
+
+    QMap<QString ,QVariant> nanakshahi = date.value("nanakshahi").toMap();
+    QMap<QString ,QVariant> punjabi = nanakshahi.value("punjabi").toMap();
+
+    QMap<QString ,QVariant>::const_iterator punjabiDateItr = punjabi.begin();
+
+    QString pbDate = " "+punjabiDateItr.key();
+    QString pbDateN = " "+punjabiDateItr.value().toString().toUtf8();
+    QString pb = QString::fromLatin1("%1 : %2").arg(punjabiDateItr.key(),pbDateN);
+
+    QMap<QString ,QVariant>::const_iterator dateItr = gregorian.begin();
+    dateItr++;
+    QString key = dateItr.key();
+    QString val = " ";
+    val.append(dateItr.value().toString());
+
+    if (map.value("error").toString() == "false"){
+        int a;
+        a++;
+    }
+
+    int a=1;
+    a++;
+
 }
 
 void ApplicationUI::onSystemLanguageChanged()

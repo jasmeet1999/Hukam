@@ -26,7 +26,7 @@
 
     <!-- A universally unique application identifier. Must be unique across all BlackBerry 10 applications.
          Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
-    <id>com.example.Hukam</id>
+    <id>co.jasmeetsingh.Hukam</id>
     <configuration name="Device-Debug">
        <platformArchitecture>armle-v7</platformArchitecture>
        <asset path="arm/o.le-v7-g/Hukam" entry="true" type="Qnx/Elf">Hukam</asset>
@@ -69,31 +69,40 @@
     <!-- <copyright></copyright> -->
 
     <!--  Name of author which is used for signing. Must match the developer name of your development certificate. -->
-    <author>Example Inc.</author>
+    <icon>
+       <image>Hukam110x110.png</image>
+       <image>Hukam90x90.png</image>
+       <image>Hukam96x96.png</image>
+       <image>Hukam86x86.png</image>
+       <image>Hukam144x144.png</image>
+    </icon>
+    <authorId>gYAAgEkH9H5rcjTo-SCYX5SmQPI</authorId>
+    <author>jasmeetsingh</author>
 
     <!--  Unique author ID assigned by signing authority. Required if using debug tokens. -->
     <!-- <authorId>ABC1234YjsnUk235h</authorId> -->
 
     <initialWindow>
-        <autoOrients>true</autoOrients>
         <systemChrome>none</systemChrome>
     </initialWindow>
 
     <!--  The icon for the application, which should be 114x114. -->
-    <icon>
-        <image>icon.png</image>
-    </icon>
 
-    <asset path="icon.png">icon.png</asset>
     <asset path="assets">assets</asset>
 
     <!-- Locale support -->
     <asset path="translations" dest="qm">
         <include name="*.qm"/>
     </asset>
+    <asset path="icon/Hukam110x110.png">Hukam110x110.png</asset>
+    <asset path="icon/Hukam90x90.png">Hukam90x90.png</asset>
+    <asset path="icon/Hukam96x96.png">Hukam96x96.png</asset>
+    <asset path="icon/Hukam86x86.png">Hukam86x86.png</asset>
+    <asset path="icon/Hukam144x144.png">Hukam144x144.png</asset>
 
     <!-- Request permission to execute native code.  Required for native applications. -->
     <permission system="true">run_native</permission>
     <env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib"/>
+    <env var="CASCADES_THEME" value="default"/>
 
 </qnx>

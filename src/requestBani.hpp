@@ -22,6 +22,9 @@ public:
     RequestBani(QObject *parent = 0);
     virtual ~RequestBani();
 
+Q_SIGNALS:
+ void complete(const QString &data);
+
 public Q_SLOTS:
     void getRequest();
 

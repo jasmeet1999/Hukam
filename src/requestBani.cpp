@@ -62,6 +62,8 @@ void RequestBani::onReply(QNetworkReply *reply){
     if (map.value("error").toString() == "false"){
 
     }
+
+    emit complete(pb);
 }
 
 RequestBani::~RequestBani()

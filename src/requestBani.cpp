@@ -31,39 +31,38 @@ void RequestBani::getRequest(){
     connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(onReply(QNetworkReply*)));
 }
 
-void RequestBani::onReply(QNetworkReply *reply){
-    bb::data::JsonDataAccess json;
-    QVariant list = json.load(reply);
-    QMap<QString ,QVariant> map = list.toMap();
+void RequestBani::onReply(QNetworkReply *reply) {
 
-    bool check = map.contains("error");
-    Q_UNUSED(check);
+    bb::data::JsonDataAccess jda;
+    QVariant jsonData = jda.load(reply);
+    QMap<QString ,QVariant> jsonRoot = jsonData.toMap();
 
-    QString ans = map.value("error").toString();
+    QString raagMahala;
+    QString bani = " ";
 
-    QMap<QString ,QVariant> date = map.value("date").toMap();
-    QMap<QString ,QVariant> gregorian = date.value("gregorian").toMap();
+    bool error = jsonRoot.find("error").value().toBool();
 
-    QMap<QString ,QVariant> nanakshahi = date.value("nanakshahi").toMap();
-    QMap<QString ,QVariant> punjabi = nanakshahi.value("punjabi").toMap();
+    if (error == false) {
+        QList<QVariant> hukamnama = jsonRoot.value("hukamnama").toList();
 
-    QMap<QString ,QVariant>::const_iterator punjabiDateItr = punjabi.begin();
+        QMap<QString ,QVariant> mahala = hukamnama.at(0).toMap();
 
-    QString pbDate = " "+punjabiDateItr.key();
-    QString pbDateN = " "+punjabiDateItr.value().toString().toUtf8();
-    QString pb = QString::fromLatin1("%1 : %2").arg(punjabiDateItr.key(),pbDateN);
+        QMap<QString ,QVariant> line = mahala.value("line").toMap();
+        QMap<QString ,QVariant> gurmukhi = line.value("gurmukhi").toMap();
+        raagMahala = " " + gurmukhi.find("unicode").value().toString().toUtf8();
 
-    QMap<QString ,QVariant>::const_iterator dateItr = gregorian.begin();
-    dateItr++;
-    QString key = dateItr.key();
-    QString val = " ";
-    val.append(dateItr.value().toString());
+        for (int i = 1; i < hukamnama.length(); i++) {
+            QMap<QString ,QVariant> baniLine = hukamnama.at(i).toMap();
 
-    if (map.value("error").toString() == "false"){
+            QMap<QString ,QVariant> line = baniLine.value("line").toMap();
+            QMap<QString ,QVariant> gurmukhi = line.value("gurmukhi").toMap();
+            bani = bani + gurmukhi.find("unicode").value().toString().toUtf8();
+            bani = bani + " ";
+        }
 
+        emit raagAndMahalaComplete(QString::fromUtf8(raagMahala.toAscii()));
+        emit baniComplete(QString::fromUtf8(bani.toAscii()));
     }
-
-    emit complete(pb);
 }
 
 RequestBani::~RequestBani()

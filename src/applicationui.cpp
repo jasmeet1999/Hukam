@@ -48,15 +48,21 @@ ApplicationUI::ApplicationUI() :
     Container *pContainer = new Container();
     pContainer->setLayout(StackLayout::create());
 
-    Label *label = new Label();
+    Label *mahalaLabel = new Label();
+    Label *baniLabel = new Label();
 
     RequestBani *requestBani = new RequestBani();
-    connect(requestBani,SIGNAL(complete(const QString)),label,SLOT(setText(const QString)));
+    connect(requestBani,SIGNAL(raagAndMahalaComplete(const QString)),mahalaLabel,SLOT(setText(const QString)));
+    connect(requestBani,SIGNAL(baniComplete(const QString)),baniLabel,SLOT(setText(const QString)));
     requestBani->getRequest();
 
-    label->setHorizontalAlignment(HorizontalAlignment::Center);
+    mahalaLabel->setHorizontalAlignment(HorizontalAlignment::Center);
+    baniLabel->setHorizontalAlignment(HorizontalAlignment::Center);
 
-    pContainer->add(label);
+    baniLabel->setMultiline(true);
+
+    pContainer->add(mahalaLabel);
+    pContainer->add(baniLabel);
 
     Page *page = new Page();
     page->setContent(pContainer);

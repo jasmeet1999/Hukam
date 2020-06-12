@@ -23,7 +23,8 @@ public:
     virtual ~RequestBani();
 
 Q_SIGNALS:
- void complete(const QString &data);
+ void raagAndMahalaComplete(const QString);
+ void baniComplete(const QString);
 
 public Q_SLOTS:
     void getRequest();

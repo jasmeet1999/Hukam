@@ -22,6 +22,7 @@
 #include <bb/cascades/Container>
 #include <bb/cascades/StackLayout>
 #include <bb/cascades/Page>
+#include <bb/cascades/Label>
 
 #include "RequestBani.hpp"
 
@@ -47,8 +48,15 @@ ApplicationUI::ApplicationUI() :
     Container *pContainer = new Container();
     pContainer->setLayout(StackLayout::create());
 
+    Label *label = new Label();
+
     RequestBani *requestBani = new RequestBani();
+    connect(requestBani,SIGNAL(complete(const QString)),label,SLOT(setText(const QString)));
     requestBani->getRequest();
+
+    label->setHorizontalAlignment(HorizontalAlignment::Center);
+
+    pContainer->add(label);
 
     Page *page = new Page();
     page->setContent(pContainer);

@@ -76,6 +76,13 @@
        <image>Hukam86x86.png</image>
        <image>Hukam144x144.png</image>
     </icon>
+    <splashScreens>
+       <image>Splash1024x600.png</image>
+       <image>Splash1440x1440.png</image>
+       <image>Splash720x1280.png</image>
+       <image>Splash720x720.png</image>
+       <image>Splash768x1280.png</image>
+    </splashScreens>
     <authorId>gYAAgEkH9H5rcjTo-SCYX5SmQPI</authorId>
     <author>jasmeetsingh</author>
 
@@ -99,6 +106,11 @@
     <asset path="icon/Hukam96x96.png">Hukam96x96.png</asset>
     <asset path="icon/Hukam86x86.png">Hukam86x86.png</asset>
     <asset path="icon/Hukam144x144.png">Hukam144x144.png</asset>
+    <asset path="assets/splash screen/Splash1024x600.png">Splash1024x600.png</asset>
+    <asset path="assets/splash screen/Splash1440x1440.png">Splash1440x1440.png</asset>
+    <asset path="assets/splash screen/Splash720x1280.png">Splash720x1280.png</asset>
+    <asset path="assets/splash screen/Splash720x720.png">Splash720x720.png</asset>
+    <asset path="assets/splash screen/Splash768x1280.png">Splash768x1280.png</asset>
 
     <!-- Request permission to execute native code.  Required for native applications. -->
     <permission system="true">run_native</permission>

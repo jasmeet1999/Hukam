@@ -26,6 +26,11 @@
 #include <bb/cascades/TitleBar>
 #include <bb/cascades/ScrollView>
 
+#include <bb/cascades/Menu>
+#include <bb/cascades/ActionItem>
+#include <bb/cascades/SettingsActionItem>
+#include <bb/cascades/HelpActionItem>
+
 #include "RequestBani.hpp"
 
 using namespace bb::cascades;
@@ -47,15 +52,27 @@ ApplicationUI::ApplicationUI() :
     // initial load
     onSystemLanguageChanged();
 
-    QString titleName = QString::fromUtf8("ਹੁਕਮਨਾਮਾ");
+    // Enable Application Menu
+    if (!Application::instance()->isMenuEnabled()) {
+        Application::instance()->setMenuEnabled(true);
+    }
 
+    // Adding Menu items
+    Menu *menu = Menu::create()
+        .addAction(ActionItem::create().title("About").image("asset:///glyph/about.png"))
+        .addAction(ActionItem::create().title("Feedback").image("asset:///glyph/feedback.png"))
+        .settings(SettingsActionItem::create());
+
+    // Creating title bar
+    QString titleName = QString::fromUtf8("ਹੁਕਮਨਾਮਾ");
     TitleBar *title = new TitleBar();
     title->setTitle(titleName);
 
+    // Root Scene for app
+    ScrollView *scrollView = ScrollView::create().scrollMode(ScrollMode::Vertical);
+
     Container *pContainer = new Container();
     pContainer->setLayout(StackLayout::create());
-
-    ScrollView *scrollView = ScrollView::create().scrollMode(ScrollMode::Vertical);
 
     Label *mahalaLabel = new Label();
     Label *baniLabel = new Label();
@@ -81,7 +98,7 @@ ApplicationUI::ApplicationUI() :
     page->setTitleBar(title);
     page->setContent(scrollView);
 
-    Application::instance()->setMenuEnabled(false);
+    Application::instance()->setMenu(menu);
     Application::instance()->setScene(page);
 }
 

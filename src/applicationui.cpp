@@ -23,6 +23,8 @@
 #include <bb/cascades/StackLayout>
 #include <bb/cascades/Page>
 #include <bb/cascades/Label>
+#include <bb/cascades/TitleBar>
+#include <bb/cascades/ScrollView>
 
 #include "RequestBani.hpp"
 
@@ -45,8 +47,15 @@ ApplicationUI::ApplicationUI() :
     // initial load
     onSystemLanguageChanged();
 
+    QString titleName = QString::fromUtf8("ਹੁਕਮਨਾਮਾ");
+
+    TitleBar *title = new TitleBar();
+    title->setTitle(titleName);
+
     Container *pContainer = new Container();
     pContainer->setLayout(StackLayout::create());
+
+    ScrollView *scrollView = ScrollView::create().scrollMode(ScrollMode::Vertical);
 
     Label *mahalaLabel = new Label();
     Label *baniLabel = new Label();
@@ -59,14 +68,20 @@ ApplicationUI::ApplicationUI() :
     mahalaLabel->setHorizontalAlignment(HorizontalAlignment::Center);
     baniLabel->setHorizontalAlignment(HorizontalAlignment::Center);
 
+    baniLabel->textStyle()->setTextAlign(TextAlign::Center);
+
     baniLabel->setMultiline(true);
 
     pContainer->add(mahalaLabel);
     pContainer->add(baniLabel);
 
-    Page *page = new Page();
-    page->setContent(pContainer);
+    scrollView->setContent(pContainer);
 
+    Page *page = new Page();
+    page->setTitleBar(title);
+    page->setContent(scrollView);
+
+    Application::instance()->setMenuEnabled(false);
     Application::instance()->setScene(page);
 }
 

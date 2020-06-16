@@ -38,7 +38,7 @@ void RequestBani::onReply(QNetworkReply *reply) {
     QMap<QString ,QVariant> jsonRoot = jsonData.toMap();
 
     QString raagMahala;
-    QString bani = " ";
+    QString bani;
 
     bool error = jsonRoot.find("error").value().toBool();
 
@@ -49,7 +49,7 @@ void RequestBani::onReply(QNetworkReply *reply) {
 
         QMap<QString ,QVariant> line = mahala.value("line").toMap();
         QMap<QString ,QVariant> gurmukhi = line.value("gurmukhi").toMap();
-        raagMahala = " " + gurmukhi.find("unicode").value().toString().toUtf8();
+        raagMahala = gurmukhi.find("unicode").value().toString().toUtf8();
 
         for (int i = 1; i < hukamnama.length(); i++) {
             QMap<QString ,QVariant> baniLine = hukamnama.at(i).toMap();
@@ -57,7 +57,7 @@ void RequestBani::onReply(QNetworkReply *reply) {
             QMap<QString ,QVariant> line = baniLine.value("line").toMap();
             QMap<QString ,QVariant> gurmukhi = line.value("gurmukhi").toMap();
             bani = bani + gurmukhi.find("unicode").value().toString().toUtf8();
-            bani = bani + " ";
+            bani = bani + "\n";
         }
 
         emit raagAndMahalaComplete(QString::fromUtf8(raagMahala.toAscii()));

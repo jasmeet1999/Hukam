@@ -54,8 +54,10 @@ ApplicationUI::ApplicationUI() :
 
     Container *pContainer = new Container();
     pContainer->setLayout(StackLayout::create());
+    pContainer->setHorizontalAlignment(HorizontalAlignment::Fill);
 
     ScrollView *scrollView = ScrollView::create().scrollMode(ScrollMode::Vertical);
+    scrollView->setHorizontalAlignment(HorizontalAlignment::Fill);
 
     Label *mahalaLabel = new Label();
     Label *baniLabel = new Label();

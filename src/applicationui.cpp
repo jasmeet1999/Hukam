@@ -52,6 +52,8 @@ ApplicationUI::ApplicationUI() :
     // initial load
     onSystemLanguageChanged();
 
+    mNavigationPane = new NavigationPane;
+
     // Enable Application Menu
     if (!Application::instance()->isMenuEnabled()) {
         Application::instance()->setMenuEnabled(true);
@@ -62,6 +64,10 @@ ApplicationUI::ApplicationUI() :
         .addAction(ActionItem::create().title("About").image("asset:///glyph/about.png"))
         .addAction(ActionItem::create().title("Feedback").image("asset:///glyph/feedback.png"))
         .settings(SettingsActionItem::create());
+
+    connect(menu->actionAt(0),SIGNAL(triggered()),this,SLOT(aboutTriggered()));
+    connect(menu->actionAt(1),SIGNAL(triggered()),this,SLOT(feedbackTriggered()));
+    connect(menu->settingsAction(),SIGNAL(triggered()),this,SLOT(settingsTriggered()));
 
     // Creating title bar
     QString titleName = QString::fromUtf8("ਹੁਕਮਨਾਮਾ");
@@ -98,8 +104,22 @@ ApplicationUI::ApplicationUI() :
     page->setTitleBar(title);
     page->setContent(scrollView);
 
+    mNavigationPane->push(page);
+
     Application::instance()->setMenu(menu);
-    Application::instance()->setScene(page);
+    Application::instance()->setScene(mNavigationPane);
+}
+
+void APPlicationUI::aboutTriggered() {
+
+}
+
+void APPlicationUI::feedbackTriggered() {
+
+}
+
+void APPlicationUI::settingsTriggered() {
+
 }
 
 void ApplicationUI::onSystemLanguageChanged()

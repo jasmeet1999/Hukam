@@ -26,6 +26,14 @@
 #include <bb/cascades/TitleBar>
 #include <bb/cascades/ScrollView>
 
+#include <bb/cascades/Menu>
+#include <bb/cascades/ActionItem>
+#include <bb/cascades/SettingsActionItem>
+#include <bb/cascades/HelpActionItem>
+
+#include <bb/system/InvokeRequest>
+#include <bb/system/InvokeManager>
+
 #include "RequestBani.hpp"
 
 using namespace bb::cascades;
@@ -47,15 +55,33 @@ ApplicationUI::ApplicationUI() :
     // initial load
     onSystemLanguageChanged();
 
-    QString titleName = QString::fromUtf8("ਹੁਕਮਨਾਮਾ");
+    mNavigationPane = new NavigationPane;
 
+    // Enable Application Menu
+    if (!Application::instance()->isMenuEnabled()) {
+        Application::instance()->setMenuEnabled(true);
+    }
+
+    // Adding Menu items
+    Menu *menu = Menu::create()
+        .addAction(ActionItem::create().title("About").image("asset:///glyph/about.png"))
+        .addAction(ActionItem::create().title("Feedback").image("asset:///glyph/feedback.png"))
+        .settings(SettingsActionItem::create());
+
+    connect(menu->actionAt(0),SIGNAL(triggered()),this,SLOT(aboutTriggered()));
+    connect(menu->actionAt(1),SIGNAL(triggered()),this,SLOT(feedbackTriggered()));
+    connect(menu->settingsAction(),SIGNAL(triggered()),this,SLOT(settingsTriggered()));
+
+    // Creating title bar
+    QString titleName = QString::fromUtf8("ਹੁਕਮਨਾਮਾ");
     TitleBar *title = new TitleBar();
     title->setTitle(titleName);
 
+    // Root Scene for app
+    ScrollView *scrollView = ScrollView::create().scrollMode(ScrollMode::Vertical);
+
     Container *pContainer = new Container();
     pContainer->setLayout(StackLayout::create());
-
-    ScrollView *scrollView = ScrollView::create().scrollMode(ScrollMode::Vertical);
 
     Label *mahalaLabel = new Label();
     Label *baniLabel = new Label();
@@ -81,8 +107,42 @@ ApplicationUI::ApplicationUI() :
     page->setTitleBar(title);
     page->setContent(scrollView);
 
-    Application::instance()->setMenuEnabled(false);
-    Application::instance()->setScene(page);
+    mNavigationPane->push(page);
+
+    Application::instance()->setMenu(menu);
+    Application::instance()->setScene(mNavigationPane);
+}
+
+void ApplicationUI::aboutTriggered() {
+    QString aboutTitleText = "About";
+    TitleBar *aboutTitle = new TitleBar();
+    aboutTitle->setTitle(aboutTitleText);
+    Page *aboutPage = new Page;
+    aboutPage->setTitleBar(aboutTitle);
+    mNavigationPane->push(aboutPage);
+}
+
+void ApplicationUI::feedbackTriggered() {
+    bb::system::InvokeManager invokeManager;
+    bb::system::InvokeRequest request;
+
+    QByteArray url = QUrl::toPercentEncoding("mailto:jasmeetsinghkhokhar.com?subject=Hukam Feedback");
+
+    request.setTarget("sys.pim.uib.email.hybridcomposer");
+    request.setAction("bb.action.OPEN");
+    request.setMimeType("text/plain");
+    request.setUri(QUrl::fromPercentEncoding(url));
+
+    bb::system::InvokeTargetReply *reply = invokeManager.invoke(request);
+}
+
+void ApplicationUI::settingsTriggered() {
+    QString settingsTitleText = "Settings";
+    TitleBar *settingsTitle = new TitleBar();
+    settingsTitle->setTitle(settingsTitleText);
+    Page *settingsPage = new Page;
+    settingsPage->setTitleBar(settingsTitle);
+    mNavigationPane->push(settingsPage);
 }
 
 void ApplicationUI::onSystemLanguageChanged()

@@ -71,10 +71,10 @@
     <!--  Name of author which is used for signing. Must match the developer name of your development certificate. -->
     <icon>
        <image>Hukam110x110.png</image>
+       <image>Hukam144x144.png</image>
+       <image>Hukam86x86.png</image>
        <image>Hukam90x90.png</image>
        <image>Hukam96x96.png</image>
-       <image>Hukam86x86.png</image>
-       <image>Hukam144x144.png</image>
     </icon>
     <splashScreens>
        <image>Splash1024x600.png</image>
@@ -102,15 +102,15 @@
         <include name="*.qm"/>
     </asset>
     <asset path="icon/Hukam110x110.png">Hukam110x110.png</asset>
+    <asset path="icon/Hukam144x144.png">Hukam144x144.png</asset>
+    <asset path="icon/Hukam86x86.png">Hukam86x86.png</asset>
     <asset path="icon/Hukam90x90.png">Hukam90x90.png</asset>
     <asset path="icon/Hukam96x96.png">Hukam96x96.png</asset>
-    <asset path="icon/Hukam86x86.png">Hukam86x86.png</asset>
-    <asset path="icon/Hukam144x144.png">Hukam144x144.png</asset>
-    <asset path="assets/splash screen/Splash1024x600.png">Splash1024x600.png</asset>
-    <asset path="assets/splash screen/Splash1440x1440.png">Splash1440x1440.png</asset>
-    <asset path="assets/splash screen/Splash720x1280.png">Splash720x1280.png</asset>
-    <asset path="assets/splash screen/Splash720x720.png">Splash720x720.png</asset>
-    <asset path="assets/splash screen/Splash768x1280.png">Splash768x1280.png</asset>
+    <asset path="splash screen/Splash1024x600.png">Splash1024x600.png</asset>
+    <asset path="splash screen/Splash1440x1440.png">Splash1440x1440.png</asset>
+    <asset path="splash screen/Splash720x1280.png">Splash720x1280.png</asset>
+    <asset path="splash screen/Splash720x720.png">Splash720x720.png</asset>
+    <asset path="splash screen/Splash768x1280.png">Splash768x1280.png</asset>
 
     <!-- Request permission to execute native code.  Required for native applications. -->
     <permission system="true">run_native</permission>

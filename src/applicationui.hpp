@@ -19,6 +19,8 @@
 
 #include <QtCore/QObject>
 
+#include <bb/cascades/NavigationPane>
+
 namespace bb
 {
     namespace cascades
@@ -42,10 +44,14 @@ public:
     virtual ~ApplicationUI() {}
 private slots:
     void onSystemLanguageChanged();
+    void aboutTriggered();
+    void feedbackTriggered();
+    void settingsTriggered();
 
 private:
     QTranslator* m_pTranslator;
     bb::cascades::LocaleHandler* m_pLocaleHandler;
+    bb::cascades::NavigationPane* mNavigationPane;
 };
 
 #endif /* ApplicationUI_HPP_ */

@@ -36,12 +36,9 @@ simulator {
 
 config_pri_assets {
     OTHER_FILES += \
-        $$quote($$BASEDIR/assets/main.qml) \
-        $$quote($$BASEDIR/assets/splash screen/Splash1024x600.png) \
-        $$quote($$BASEDIR/assets/splash screen/Splash1440x1440.png) \
-        $$quote($$BASEDIR/assets/splash screen/Splash720x1280.png) \
-        $$quote($$BASEDIR/assets/splash screen/Splash720x720.png) \
-        $$quote($$BASEDIR/assets/splash screen/Splash768x1280.png)
+        $$quote($$BASEDIR/assets/glyph/about.png) \
+        $$quote($$BASEDIR/assets/glyph/feedback.png) \
+        $$quote($$BASEDIR/assets/main.qml)
 }
 
 config_pri_source_group1 {
@@ -69,9 +66,9 @@ lupdate_inclusion {
         $$quote($$BASEDIR/../assets/*.qml) \
         $$quote($$BASEDIR/../assets/*.js) \
         $$quote($$BASEDIR/../assets/*.qs) \
-        $$quote($$BASEDIR/../assets/splash screen/*.qml) \
-        $$quote($$BASEDIR/../assets/splash screen/*.js) \
-        $$quote($$BASEDIR/../assets/splash screen/*.qs)
+        $$quote($$BASEDIR/../assets/glyph/*.qml) \
+        $$quote($$BASEDIR/../assets/glyph/*.js) \
+        $$quote($$BASEDIR/../assets/glyph/*.qs)
 
     HEADERS += \
         $$quote($$BASEDIR/../src/*.h) \

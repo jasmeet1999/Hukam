@@ -31,6 +31,9 @@
 #include <bb/cascades/SettingsActionItem>
 #include <bb/cascades/HelpActionItem>
 
+#include <bb/system/InvokeRequest>
+#include <bb/system/InvokeManager>
+
 #include "RequestBani.hpp"
 
 using namespace bb::cascades;
@@ -110,16 +113,36 @@ ApplicationUI::ApplicationUI() :
     Application::instance()->setScene(mNavigationPane);
 }
 
-void APPlicationUI::aboutTriggered() {
-
+void ApplicationUI::aboutTriggered() {
+    QString aboutTitleText = "About";
+    TitleBar *aboutTitle = new TitleBar();
+    aboutTitle->setTitle(aboutTitleText);
+    Page *aboutPage = new Page;
+    aboutPage->setTitleBar(aboutTitle);
+    mNavigationPane->push(aboutPage);
 }
 
-void APPlicationUI::feedbackTriggered() {
+void ApplicationUI::feedbackTriggered() {
+    bb::system::InvokeManager invokeManager;
+    bb::system::InvokeRequest request;
 
+    QByteArray url = QUrl::toPercentEncoding("mailto:jasmeetsinghkhokhar.com?subject=Hukam Feedback");
+
+    request.setTarget("sys.pim.uib.email.hybridcomposer");
+    request.setAction("bb.action.OPEN");
+    request.setMimeType("text/plain");
+    request.setUri(QUrl::fromPercentEncoding(url));
+
+    bb::system::InvokeTargetReply *reply = invokeManager.invoke(request);
 }
 
-void APPlicationUI::settingsTriggered() {
-
+void ApplicationUI::settingsTriggered() {
+    QString settingsTitleText = "Settings";
+    TitleBar *settingsTitle = new TitleBar();
+    settingsTitle->setTitle(settingsTitleText);
+    Page *settingsPage = new Page;
+    settingsPage->setTitleBar(settingsTitle);
+    mNavigationPane->push(settingsPage);
 }
 
 void ApplicationUI::onSystemLanguageChanged()

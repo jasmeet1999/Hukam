@@ -115,6 +115,6 @@
     <!-- Request permission to execute native code.  Required for native applications. -->
     <permission system="true">run_native</permission>
     <env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib"/>
-    <env var="CASCADES_THEME" value="bright"/>
+    <env var="CASCADES_THEME" value="bright?primaryColor=0xFFAB40&amp;primaryBase=0xFB8C00"/>
 
 </qnx>

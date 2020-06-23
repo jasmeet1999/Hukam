@@ -34,6 +34,14 @@
 #include <bb/system/InvokeRequest>
 #include <bb/system/InvokeManager>
 
+#include <bb/cascades/Slider>
+#include <bb/cascades/ToggleButton>
+#include <bb/cascades/Header>
+#include <bb/cascades/DockLayout>
+
+#include <bb/cascades/VisualStyle>
+#include <bb/cascades/ThemeSupport>
+
 #include "RequestBani.hpp"
 
 using namespace bb::cascades;
@@ -54,6 +62,9 @@ ApplicationUI::ApplicationUI() :
 
     // initial load
     onSystemLanguageChanged();
+
+    // set Bright theme
+    themeState = false;
 
     mNavigationPane = new NavigationPane;
 
@@ -99,6 +110,14 @@ ApplicationUI::ApplicationUI() :
     baniLabel->textStyle()->setTextAlign(TextAlign::Center);
 
     baniLabel->setMultiline(true);
+    fontValue = 8;
+    mahalaLabel->textStyle()->setFontSize(FontSize::PointValue);
+    mahalaLabel->textStyle()->setFontSizeValue(fontValue+1.5);
+    baniLabel->textStyle()->setFontSize(FontSize::PointValue);
+    baniLabel->textStyle()->setFontSizeValue(fontValue);
+
+    connect(this,SIGNAL(fSize(float)),mahalaLabel->textStyle(),SLOT(setFontSizeValue(float)));
+    connect(this,SIGNAL(fSize(float)),baniLabel->textStyle(),SLOT(setFontSizeValue(float)));
 
     pContainer->add(mahalaLabel);
     pContainer->add(baniLabel);
@@ -142,9 +161,106 @@ void ApplicationUI::settingsTriggered() {
     QString settingsTitleText = "Settings";
     TitleBar *settingsTitle = new TitleBar();
     settingsTitle->setTitle(settingsTitleText);
+
     Page *settingsPage = new Page;
+
+    ScrollView *sScrollView = ScrollView::create().scrollMode(ScrollMode::Vertical);
+    sScrollView->setHorizontalAlignment(HorizontalAlignment::Fill);
+
+    Container *sContainer = new Container();
+    sContainer->setLayout(StackLayout::create());
+
+    Header *theme = new Header();
+    theme->setTitle("Theme");
+
+    Container *themeContainer = new Container();
+    themeContainer->setLayout(DockLayout::create());
+    themeContainer->setHorizontalAlignment(HorizontalAlignment::Fill);
+    UIConfig *ui = themeContainer->ui();
+    themeContainer->setTopPadding(ui->du(1));
+    themeContainer->setRightPadding(ui->du(4));
+    themeContainer->setLeftPadding(ui->du(4));
+
+    ToggleButton *themeSwitch = ToggleButton::create();
+    themeSwitch->setChecked(themeState);
+    themeSwitch->setHorizontalAlignment(HorizontalAlignment::Right);
+    connect(themeSwitch,SIGNAL(checkedChanged(bool)),this,SLOT(themeChange(bool)));
+    Label *themeLabel = Label::create().text("Dark Theme");
+    themeLabel->setHorizontalAlignment(HorizontalAlignment::Left);
+
+    themeContainer->add(themeLabel);
+    themeContainer->add(themeSwitch);
+
+    Header *display = new Header();
+    display->setTitle("Display");
+
+    Container *displayContainer = new Container();
+    displayContainer->setHorizontalAlignment(HorizontalAlignment::Fill);
+    displayContainer->setTopPadding(ui->du(1));
+    displayContainer->setRightPadding(ui->du(4));
+    displayContainer->setLeftPadding(ui->du(4));
+
+    Label *fontSize = Label::create().text("Font Size");
+    Slider *slider = Slider::create();
+    slider->setTopPadding(ui->du(2));
+    slider->setBottomPadding(ui->du(2));
+    Label *fontCheckTitle = Label::create().text(QString::fromUtf8("ਸੂਹੀ ਮਹਲਾ ੫ ॥"));
+    fontCheckTitle->setHorizontalAlignment(HorizontalAlignment::Center);
+    Label *fontCheckBody = new Label();
+    fontCheckBody->setHorizontalAlignment(HorizontalAlignment::Center);
+    fontCheckBody->setMultiline(true);
+    QString checkBani = QString::fromUtf8("ਸੰਤਾ ਕੇ ਕਾਰਜਿ ਆਪਿ ਖਲੋਇਆ ਹਰਿ ਕੰਮੁ ਕਰਾਵਣਿ ਆਇਆ ਰਾਮ ॥\n");
+    checkBani.append(QString::fromUtf8("ਧਰਤਿ ਸੁਹਾਵੀ ਤਾਲੁ ਸੁਹਾਵਾ ਵਿਚਿ ਅੰਮ੍ਰਿਤ ਜਲੁ ਛਾਇਆ ਰਾਮ ॥\n"));
+//    checkBani.append(QString::fromUtf8("ਅੰਮ੍ਰਿਤ ਜਲੁ ਛਾਇਆ ਪੂਰਨ ਸਾਜੁ ਕਰਾਇਆ ਸਗਲ ਮਨੋਰਥ ਪੂਰੇ ॥\n"));
+//    checkBani.append(QString::fromUtf8("ਜੈ ਜੈ ਕਾਰੁ ਭਇਆ ਜਗ ਅੰਤਰਿ ਲਾਥੇ ਸਗਲ ਵਿਸੂਰੇ ॥\n"));
+//    checkBani.append(QString::fromUtf8("ਪੂਰਨ ਪੁਰਖ ਅਚੁਤ ਅਬਿਨਾਸੀ ਜਸੁ ਵੇਦ ਪੁਰਾਣੀ ਗਾਇਆ ॥\n"));
+//    checkBani.append(QString::fromUtf8("ਅਪਨਾ ਬਿਰਦੁ ਰਖਿਆ ਪਰਮੇਸਰਿ ਨਾਨਕ ਨਾਮੁ ਧਿਆਇਆ ॥੧॥"));
+    fontCheckBody->setText(checkBani);
+    fontCheckTitle->textStyle()->setTextAlign(TextAlign::Center);
+    fontCheckBody->textStyle()->setTextAlign(TextAlign::Center);
+
+    fontCheckTitle->textStyle()->setFontSize(FontSize::PointValue);
+    fontCheckTitle->textStyle()->setFontSizeValue(fontValue+1.5);
+    fontCheckBody->textStyle()->setFontSize(FontSize::PointValue);
+    fontCheckBody->textStyle()->setFontSizeValue(fontValue);
+
+    connect(this,SIGNAL(fSize(float)),fontCheckTitle->textStyle(),SLOT(setFontSizeValue(float)));
+    connect(this,SIGNAL(fSize(float)),fontCheckBody->textStyle(),SLOT(setFontSizeValue(float)));
+
+    slider->setRange(5,13);
+    slider->setValue(fontValue);
+
+    connect(slider,SIGNAL(valueChanged(float)),this,SLOT(updateValue(float)));
+
+    displayContainer->add(fontSize);
+    displayContainer->add(slider);
+    displayContainer->add(fontCheckTitle);
+    displayContainer->add(fontCheckBody);
+
+    sContainer->add(theme);
+    sContainer->add(themeContainer);
+    sContainer->add(display);
+    sContainer->add(displayContainer);
+
+    sScrollView->setContent(sContainer);
+    settingsPage->setContent(sScrollView);
+
     settingsPage->setTitleBar(settingsTitle);
+
     mNavigationPane->push(settingsPage);
+}
+
+void ApplicationUI::themeChange(bool state) {
+    themeState = state;
+    if (state)
+        Application::instance()->themeSupport()->setVisualStyle(VisualStyle::Dark);
+    else
+        Application::instance()->themeSupport()->setVisualStyle(VisualStyle::Bright);
+}
+
+void ApplicationUI::updateValue(float u_value) {
+    fontValue = u_value;
+    emit(fSize(fontValue));
 }
 
 void ApplicationUI::onSystemLanguageChanged()

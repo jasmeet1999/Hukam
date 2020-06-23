@@ -42,16 +42,24 @@ class ApplicationUI : public QObject
 public:
     ApplicationUI();
     virtual ~ApplicationUI() {}
+
+Q_SIGNALS:
+    void fSize(float);
+
 private slots:
     void onSystemLanguageChanged();
     void aboutTriggered();
     void feedbackTriggered();
     void settingsTriggered();
+    void updateValue(float);
+    void themeChange(bool);
 
 private:
     QTranslator* m_pTranslator;
     bb::cascades::LocaleHandler* m_pLocaleHandler;
     bb::cascades::NavigationPane* mNavigationPane;
+    float fontValue;
+    bool themeState;
 };
 
 #endif /* ApplicationUI_HPP_ */

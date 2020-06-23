@@ -63,8 +63,24 @@ ApplicationUI::ApplicationUI() :
     // initial load
     onSystemLanguageChanged();
 
-    // set Bright theme
-    themeState = false;
+    QSettings settings("jasmeetsingh","Hukam");
+
+    // load user setting for font
+    if (settings.value("data/fontSize").isNull())
+        settings.setValue("data/fontSize",8);
+
+    // load user setting for theme
+    if (settings.value("data/theme").isNull())
+        settings.setValue("data/theme","bright");
+
+    // set font and theme
+    fontValue = settings.value("data/fontSize").toInt();
+    QString theme = settings.value("data/theme").toString();
+    if (theme == "bright")
+        themeState = false;
+    if (theme == "dark")
+        themeState = true;
+    themeChange(themeState);
 
     mNavigationPane = new NavigationPane;
 
@@ -110,7 +126,6 @@ ApplicationUI::ApplicationUI() :
     baniLabel->textStyle()->setTextAlign(TextAlign::Center);
 
     baniLabel->setMultiline(true);
-    fontValue = 8;
     mahalaLabel->textStyle()->setFontSize(FontSize::PointValue);
     mahalaLabel->textStyle()->setFontSizeValue(fontValue+1.5);
     baniLabel->textStyle()->setFontSize(FontSize::PointValue);
@@ -251,15 +266,26 @@ void ApplicationUI::settingsTriggered() {
 }
 
 void ApplicationUI::themeChange(bool state) {
+    QSettings settings("jasmeetsingh","Hukam");
     themeState = state;
-    if (state)
+    if (state) {
         Application::instance()->themeSupport()->setVisualStyle(VisualStyle::Dark);
-    else
+        settings.setValue("data/theme","dark");
+    }
+    else {
         Application::instance()->themeSupport()->setVisualStyle(VisualStyle::Bright);
+        settings.setValue("data/theme","bright");
+    }
 }
 
 void ApplicationUI::updateValue(float u_value) {
-    fontValue = u_value;
+    int value = u_value;
+    QSettings settings("jasmeetsingh","Hukam");
+    settings.setValue("data/fontSize",value);
+    fontValue = settings.value("data/fontSize").toInt();
+    settings.sync();
+    int a=0;
+    a++;
     emit(fSize(fontValue));
 }
 

@@ -53,6 +53,7 @@ private slots:
     void settingsTriggered();
     void updateValue(float);
     void themeChange(bool);
+    void resetSettings();
 
 private:
     QTranslator* m_pTranslator;

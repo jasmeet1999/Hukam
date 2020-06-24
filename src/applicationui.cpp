@@ -38,6 +38,8 @@
 #include <bb/cascades/ToggleButton>
 #include <bb/cascades/Header>
 #include <bb/cascades/DockLayout>
+#include <bb/cascades/Button>
+#include <bb/cascades/Divider>
 
 #include <bb/cascades/VisualStyle>
 #include <bb/cascades/ThemeSupport>
@@ -173,6 +175,8 @@ void ApplicationUI::feedbackTriggered() {
 }
 
 void ApplicationUI::settingsTriggered() {
+    Divider *div = Divider::create();
+
     QString settingsTitleText = "Settings";
     TitleBar *settingsTitle = new TitleBar();
     settingsTitle->setTitle(settingsTitleText);
@@ -184,6 +188,8 @@ void ApplicationUI::settingsTriggered() {
 
     Container *sContainer = new Container();
     sContainer->setLayout(StackLayout::create());
+    UIConfig *ui = sContainer->ui();
+    sContainer->setBottomPadding(ui->du(2));
 
     Header *theme = new Header();
     theme->setTitle("Theme");
@@ -191,7 +197,6 @@ void ApplicationUI::settingsTriggered() {
     Container *themeContainer = new Container();
     themeContainer->setLayout(DockLayout::create());
     themeContainer->setHorizontalAlignment(HorizontalAlignment::Fill);
-    UIConfig *ui = themeContainer->ui();
     themeContainer->setTopPadding(ui->du(1));
     themeContainer->setRightPadding(ui->du(4));
     themeContainer->setLeftPadding(ui->du(4));
@@ -247,15 +252,49 @@ void ApplicationUI::settingsTriggered() {
 
     connect(slider,SIGNAL(valueChanged(float)),this,SLOT(updateValue(float)));
 
+
+
+    Container *larivaarContainer = new Container();
+    larivaarContainer->setLayout(DockLayout::create());
+    larivaarContainer->setHorizontalAlignment(HorizontalAlignment::Fill);
+    larivaarContainer->setTopPadding(ui->du(1));
+    larivaarContainer->setRightPadding(ui->du(4));
+    larivaarContainer->setLeftPadding(ui->du(4));
+    larivaarContainer->setBottomPadding(ui->du(1));
+
+    ToggleButton *larivaarSwitch = ToggleButton::create();
+    //larivaarSwitch->setChecked(themeState);
+    larivaarSwitch->setHorizontalAlignment(HorizontalAlignment::Right);
+    //connect(larivaarSwitch,SIGNAL(checkedChanged(bool)),this,SLOT(themeChange(bool)));
+    Label *larivaar = Label::create().text("Larivaar");
+    larivaar->setHorizontalAlignment(HorizontalAlignment::Left);
+
+    larivaarContainer->add(larivaar);
+    larivaarContainer->add(larivaarSwitch);
+
     displayContainer->add(fontSize);
     displayContainer->add(slider);
     displayContainer->add(fontCheckTitle);
     displayContainer->add(fontCheckBody);
 
+    Container *resetContainer = new Container();
+    resetContainer->setHorizontalAlignment(HorizontalAlignment::Fill);
+    Button *resetDefault = Button::create("Reset Default");
+    resetDefault->setHorizontalAlignment(HorizontalAlignment::Fill);
+    resetContainer->setLeftPadding(ui->du(2));
+    resetContainer->setRightPadding(ui->du(2));
+    resetContainer->setTopPadding(ui->du(2));
+    resetContainer->setBottomPadding(ui->du(1));
+    connect(resetDefault,SIGNAL(clicked()),this,SLOT(resetSettings()));
+    resetContainer->add(resetDefault);
+
     sContainer->add(theme);
     sContainer->add(themeContainer);
     sContainer->add(display);
     sContainer->add(displayContainer);
+    sContainer->add(larivaarContainer);
+    sContainer->add(div);
+    sContainer->add(resetContainer);
 
     sScrollView->setContent(sContainer);
     settingsPage->setContent(sScrollView);
@@ -287,6 +326,21 @@ void ApplicationUI::updateValue(float u_value) {
     int a=0;
     a++;
     emit(fSize(fontValue));
+}
+
+void ApplicationUI::resetSettings() {
+    QSettings settings("jasmeetsingh","Hukam");
+    // reset theme settings
+    settings.setValue("data/theme","bright");
+    Application::instance()->themeSupport()->setVisualStyle(VisualStyle::Bright);
+    themeState = false;
+    // reset font size
+    settings.setValue("data/fontSize",8);
+    fontValue = settings.value("data/fontSize").toInt();
+    // Synchronize to default values
+    settings.sync();
+    emit(fSize(8));
+    mNavigationPane->pop();
 }
 
 void ApplicationUI::onSystemLanguageChanged()

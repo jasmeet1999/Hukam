@@ -74,6 +74,7 @@ void AppSetting::larivaarToggle(bool state) {
         settings.setValue("data/larivaar","on");
     else
         settings.setValue("data/larivaar","off");
+    emit(updateBani(larivaarState));
 }
 
 void AppSetting::resetSettings() {

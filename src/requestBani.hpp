@@ -28,12 +28,14 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     void getRequest();
+    void sendGETRequest(bool);
 
 private Q_SLOTS:
     void onReply(QNetworkReply* reply);
 
 private:
     QNetworkAccessManager *manager;
+    bool larivaarState;
 };
 
 #endif /* REQUESTBANI_HPP_ */

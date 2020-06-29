@@ -29,6 +29,7 @@ Q_SIGNALS:
     void fSizeT(float);
     void resetControlsVisual(bool);
     void resetControlsVisual(float);
+    void updateBani(bool);
 
 public slots:
     void themeChange(bool);

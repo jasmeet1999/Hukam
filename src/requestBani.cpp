@@ -12,12 +12,14 @@
 #include <QtNetwork/QnetworkRequest>
 
 #include <bb/data/JsonDataAccess>
+#include "AppSetting.hpp"
 
 RequestBani::RequestBani(QObject *parent):
 QObject(parent),
 manager(new QNetworkAccessManager(this))
 {
-
+    AppSetting *appSetting = new AppSetting();
+    this->larivaarState = appSetting->getLarivaarState();
 }
 
 void RequestBani::getRequest(){
@@ -29,6 +31,19 @@ void RequestBani::getRequest(){
 
     manager->get(request);
     connect(manager,SIGNAL(finished(QNetworkReply*)),this,SLOT(onReply(QNetworkReply*)));
+}
+
+void RequestBani::sendGETRequest(bool larivaarState) {
+
+    this->larivaarState = larivaarState;
+
+    const QString API = "https://api.gurbaninow.com/v2/hukamnama/today";
+
+    const QUrl url(API);
+
+    QNetworkRequest request(url);
+
+    manager->get(request);
 }
 
 void RequestBani::onReply(QNetworkReply *reply) {
@@ -48,15 +63,28 @@ void RequestBani::onReply(QNetworkReply *reply) {
         QMap<QString ,QVariant> mahala = hukamnama.at(0).toMap();
 
         QMap<QString ,QVariant> line = mahala.value("line").toMap();
-        QMap<QString ,QVariant> gurmukhi = line.value("gurmukhi").toMap();
-        raagMahala = gurmukhi.find("unicode").value().toString().toUtf8();
+
+        if (!larivaarState) {
+            QMap<QString ,QVariant> mGurmukhi = line.value("gurmukhi").toMap();
+            raagMahala = mGurmukhi.find("unicode").value().toString().toUtf8();
+        } else {
+            QMap<QString ,QVariant> mLarivaar = line.value("larivaar").toMap();
+            raagMahala = mLarivaar.find("unicode").value().toString().toUtf8();
+        }
 
         for (int i = 1; i < hukamnama.length(); i++) {
             QMap<QString ,QVariant> baniLine = hukamnama.at(i).toMap();
 
             QMap<QString ,QVariant> line = baniLine.value("line").toMap();
-            QMap<QString ,QVariant> gurmukhi = line.value("gurmukhi").toMap();
-            bani = bani + gurmukhi.find("unicode").value().toString().toUtf8();
+
+            if (!larivaarState) {
+                QMap<QString ,QVariant> gurmukhi = line.value("gurmukhi").toMap();
+                bani = bani + gurmukhi.find("unicode").value().toString().toUtf8();
+            } else {
+                QMap<QString ,QVariant> larivaar = line.value("larivaar").toMap();
+                bani = bani + larivaar.find("unicode").value().toString().toUtf8();
+            }
+
             bani = bani + "\n";
         }
 

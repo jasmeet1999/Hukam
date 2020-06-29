@@ -95,6 +95,7 @@ ApplicationUI::ApplicationUI() :
     RequestBani *requestBani = new RequestBani();
     connect(requestBani,SIGNAL(raagAndMahalaComplete(const QString)),mahalaLabel,SLOT(setText(const QString)));
     connect(requestBani,SIGNAL(baniComplete(const QString)),baniLabel,SLOT(setText(const QString)));
+    connect(appSetting,SIGNAL(updateBani(bool)),requestBani,SLOT(sendGETRequest(bool)));
     requestBani->getRequest();
 
     mahalaLabel->setHorizontalAlignment(HorizontalAlignment::Center);

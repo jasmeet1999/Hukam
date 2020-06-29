@@ -20,6 +20,7 @@
 #include <QtCore/QObject>
 
 #include <bb/cascades/NavigationPane>
+#include <bb/system/CardDoneMessage>
 #include "AppSetting.hpp"
 
 namespace bb
@@ -50,11 +51,14 @@ private slots:
     void aboutTriggered();
     void feedbackTriggered();
     void settingsTriggered();
+    void blockActionMenu(bb::cascades::Page*);
+    void unblockMenuAfterFeedback(const bb::system::CardDoneMessage&);
 
 private:
     QTranslator* m_pTranslator;
     bb::cascades::LocaleHandler* m_pLocaleHandler;
     bb::cascades::NavigationPane* mNavigationPane;
+    bb::cascades::Page *mPage;
 };
 
 #endif /* ApplicationUI_HPP_ */

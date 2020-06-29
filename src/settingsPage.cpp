@@ -21,8 +21,7 @@
 
 using namespace bb::cascades;
 
-SettingsPage::SettingsPage(AppSetting *appSetting):page(new Page())
-{
+SettingsPage::SettingsPage(AppSetting *appSetting):page(new Page()) {
     this->appSetting = appSetting;
 }
 

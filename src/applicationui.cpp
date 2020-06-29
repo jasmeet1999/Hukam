@@ -60,6 +60,7 @@ ApplicationUI::ApplicationUI() :
     appSetting = new AppSetting();
 
     mNavigationPane = new NavigationPane;
+    connect(mNavigationPane,SIGNAL(topChanged(bb::cascades::Page*)),this,SLOT(blockActionMenu(bb::cascades::Page*)));
 
     // Enable Application Menu
     if (!Application::instance()->isMenuEnabled()) {
@@ -117,11 +118,11 @@ ApplicationUI::ApplicationUI() :
 
     scrollView->setContent(pContainer);
 
-    Page *page = new Page();
-    page->setTitleBar(title);
-    page->setContent(scrollView);
+    mPage = new Page();
+    mPage->setTitleBar(title);
+    mPage->setContent(scrollView);
 
-    mNavigationPane->push(page);
+    mNavigationPane->push(mPage);
 
     Application::instance()->setMenu(menu);
     Application::instance()->setScene(mNavigationPane);
@@ -137,7 +138,7 @@ void ApplicationUI::aboutTriggered() {
 }
 
 void ApplicationUI::feedbackTriggered() {
-    bb::system::InvokeManager invokeManager;
+    bb::system::InvokeManager *invokeManager = new bb::system::InvokeManager();
     bb::system::InvokeRequest request;
 
     QByteArray url = QUrl::toPercentEncoding("mailto:jasmeetsinghkhokhar.com?subject=Hukam Feedback");
@@ -147,12 +148,31 @@ void ApplicationUI::feedbackTriggered() {
     request.setMimeType("text/plain");
     request.setUri(QUrl::fromPercentEncoding(url));
 
-    bb::system::InvokeTargetReply *reply = invokeManager.invoke(request);
+    Application::instance()->setMenuEnabled(false);
+
+    bb::system::InvokeTargetReply *reply = invokeManager->invoke(request);
+    Q_UNUSED(reply);
+
+    connect(invokeManager,SIGNAL(childCardDone(const bb::system::CardDoneMessage&)),
+            this,SLOT(unblockMenuAfterFeedback(const bb::system::CardDoneMessage&)));
 }
 
 void ApplicationUI::settingsTriggered() {
     Page *sPage = SettingsPage(appSetting).build();
     mNavigationPane->push(sPage);
+}
+
+void ApplicationUI::blockActionMenu(Page *topPage) {
+    if (topPage == mPage)
+        Application::instance()->setMenuEnabled(true);
+    else
+        Application::instance()->setMenuEnabled(false);
+}
+
+void ApplicationUI::unblockMenuAfterFeedback(const bb::system::CardDoneMessage &m) {
+    if (!Application::instance()->isMenuEnabled())
+        Application::instance()->setMenuEnabled(true);
+    Q_UNUSED(m);
 }
 
 void ApplicationUI::onSystemLanguageChanged()

@@ -43,13 +43,17 @@ config_pri_assets {
 
 config_pri_source_group1 {
     SOURCES += \
+        $$quote($$BASEDIR/src/appSetting.cpp) \
         $$quote($$BASEDIR/src/applicationui.cpp) \
         $$quote($$BASEDIR/src/main.cpp) \
-        $$quote($$BASEDIR/src/requestBani.cpp)
+        $$quote($$BASEDIR/src/requestBani.cpp) \
+        $$quote($$BASEDIR/src/settingsPage.cpp)
 
     HEADERS += \
+        $$quote($$BASEDIR/src/appSetting.hpp) \
         $$quote($$BASEDIR/src/applicationui.hpp) \
-        $$quote($$BASEDIR/src/requestBani.hpp)
+        $$quote($$BASEDIR/src/requestBani.hpp) \
+        $$quote($$BASEDIR/src/settingsPage.hpp)
 }
 
 CONFIG += precompile_header
